@@ -1,26 +1,19 @@
-struct SelectList
-    name
-    values
+struct SelectValues{T}
+    name::Symbol
+    values::Vector{T}
+    split::Bool
 end
 
-struct SelectValues
-    name
-    values
+struct SelectInterval{T}
+    name::Symbol
+    min::T
+    max::T
 end
 
 function selectdata(dwp)
-    d = Dict()
-    for s in dwp.selectlist
-        d[Symbol(s.name)] = t -> t in s.values
+    f = function(i)
+        all(getfield(i, s.name) in s.values for s in dwp.selectvalues) &&
+        all(s.min <= getfield(i, s.name) <= s.max for s in dwp.selectinterval)
     end
-    for s in dwp.selectvalues
-        d[Symbol(s.name)] =
-            (t -> (s.values[1] <= t <= s.values[2]))
-    end
-    choose_data(dwp.df, d)
-end
-
-function choose_data(df, d)
-    f = i -> all(val(getfield(i, key)) for (key, val) in d)
-    filter(f, df)
+    filter(f, dwp.df)
 end

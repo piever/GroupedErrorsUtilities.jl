@@ -1,12 +1,9 @@
-using GroupedErrorsUtilities
-using Base.Test
-school = Dagger.load(joinpath(Pkg.dir("GroupedErrorsUtilities", "test", "tables"), "school"))
+using JuliaDB, Compat
+using Compat.Test
+school = loadtable(GroupedErrors.exampletable("school.csv"))
 
-selectlist = [SelectList(:Minrty, ["Yes"]), SelectList(:Sx, ["Male"])]
+selectvalues = [SelectValues(:Minrty, ["Yes"], false), SelectValues(:Sx, ["Male"], false)]
+selectinterval = [SelectInterval(:MAch, 6, 10)]
 
-selectvalues = [SelectValues(:MAch, [6, 10])]
-
-testdwp = DataWidgetsPlot(school, selectvalues, selectlist, 0, 0, 0, 0, 0)
-
-@test selectdata(testdwp) ==
-    Dagger.load(joinpath(Pkg.dir("GroupedErrorsUtilities", "test", "tables"), "test1"))
+testdw = DataWidgets(school, selectvalues, selectinterval, 0, 0, 0, 0, 0)
+@test selectdata(testdw) == filter(i -> i.Minrty == "Yes" && i.Sx == "Male" && 6 <= i.MAch <= 10, school)
