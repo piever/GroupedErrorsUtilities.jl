@@ -3,11 +3,12 @@ module SputnikUtilities
 using GroupedErrors
 using JuliaDB, IndexedTables
 
-export DataWidgetsPlot
+import IndexedTables: AbstractIndexedTable
+
+export Data2Select, SelectedData
 export SelectInterval, SelectValues
 export selectdata
 
 include("selectdata.jl")
-include("datawidgets.jl")
 
 end # module
