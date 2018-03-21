@@ -7,7 +7,6 @@ import IndexedTables: AbstractIndexedTable
 
 export Data2Select, SelectedData
 export SelectInterval, SelectValues
-export selectdata
 
 include("selectdata.jl")
 
