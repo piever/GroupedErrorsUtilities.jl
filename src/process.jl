@@ -1,21 +1,16 @@
-struct Analysis{T, N}
+@with_kw struct Analysis{T, N}
     data::SelectedData{T, N}
-    compute_error
-    x
-    y
-    z
-    xfunc
-    yfunc
-    zfunc
-    axis_type
-    smoother
-    plot
-    plot_kwargs
-end
-
-function Analysis(s::SelectedData; kwargs...)
-    a = Analysis(s, fill(nothing, length(fieldnames(Analysis))-1)...)
-    Analysis(a; kwargs...)
+    compute_error = nothing
+    x = nothing
+    y = nothing
+    z = nothing
+    xfunc = nothing
+    yfunc = nothing
+    zfunc = nothing
+    axis_type = nothing
+    smoother = nothing
+    plot = nothing
+    plot_kwargs = []
 end
 
 function Analysis(a::Analysis; kwargs...)

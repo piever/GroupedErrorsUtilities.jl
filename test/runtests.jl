@@ -1,4 +1,4 @@
-using JuliaDB, Compat, GroupedErrors, SputnikUtilities, Images, StatPlots
+using JuliaDB, Compat, GroupedErrors, SputnikUtilities, Images, StatPlots, NamedTuples
 using Compat.Test
 school = loadtable(Pkg.dir("GroupedErrors", "test", "tables", "school.csv"))
 
@@ -22,14 +22,19 @@ end
     @test SelectedData(d2s) == SelectedData(expected, (:Minrty,))
 end
 
-@testset "scatter" begin
+@testset "statplots" begin
     selectdiscrete = (SelectValues(:Minrty, ["Yes", "No"], true), SelectValues(:Sx, ["Male"], false))
     selectcontinuous = (SelectInterval(:MAch, 6, 10),)
     expected = filter(i -> i.Sx == "Male" && 6 <= i.MAch <= 10, school)
     d2s  = Data2Select(school, selectdiscrete, selectcontinuous)
     sd = SelectedData(d2s)
-    a = Analysis(sd, x = :MAch, y = :SSS, plot = scatter, plot_kwargs = [(:legend, :topleft)])
+    a = Analysis(data = sd, x = :MAch, y = :SSS, plot = scatter, plot_kwargs = [(:legend, :topleft)])
     plt1 = process(a)
-    plt2 = @df expected scatter(:MAch, :SSS, legend = :topleft, group = @NT(Minrty = :Minrty))
+    plt2 = @df expected scatter(:MAch, :SSS, legend = :topleft, group ={:Minrty})
+    @test compare_plots(plt1, plt2) < 0.001
+
+    a = Analysis(data = sd, x = :MAch, plot = density)
+    plt1 = process(a)
+    plt2 = @df expected density(:MAch, group = {:Minrty})
     @test compare_plots(plt1, plt2) < 0.001
 end
