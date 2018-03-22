@@ -1,4 +1,5 @@
-using JuliaDB, Compat, GroupedErrors, SputnikUtilities, Images, StatPlots, NamedTuples
+using JuliaDB, Compat, GroupedErrors, SputnikUtilities, Images, NamedTuples
+using StatPlots
 using Compat.Test
 school = loadtable(Pkg.dir("GroupedErrors", "test", "tables", "school.csv"))
 
@@ -11,6 +12,12 @@ function compare_plots(plt1, plt2; sigma = [1,1], eps = 0.02)
     rm(ref1)
     rm(ref2)
     outcome
+end
+
+try
+    plot(1:4, group = @NT(a = ["a", "b", "a", "b"]))
+catch
+    println("warm up plot failed")
 end
 
 @testset "select" begin
