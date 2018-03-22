@@ -2,3 +2,5 @@
 *.jl.*.cov
 *.jl.mem
 *play.jl
+*plot1.png
+*plot2.png

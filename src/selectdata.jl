@@ -10,10 +10,10 @@ struct SelectInterval{T}
     max::T
 end
 
-struct Data2Select{T<:AbstractIndexedTable}
+struct Data2Select{T<:AbstractIndexedTable, N1, N2}
     table::T
-    discrete
-    continuous
+    discrete::NTuple{N1, SelectValues}
+    continuous::NTuple{N2, SelectInterval}
 end
 
 struct SelectedData{T<:AbstractIndexedTable, N}
