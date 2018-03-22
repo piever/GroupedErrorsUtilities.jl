@@ -1,6 +1,6 @@
 using JuliaDB, Compat, GroupedErrors, SputnikUtilities, Images, StatPlots
 using Compat.Test
-school = loadtable(GroupedErrors.exampletable("school.csv"))
+school = loadtable(Pkg.dir("GroupedErrors", "test", "tables", "school.csv"))
 
 function compare_plots(plt1, plt2; sigma = [1,1], eps = 0.02)
     ref1 = joinpath(@__DIR__, "plots", "plot1.png")
