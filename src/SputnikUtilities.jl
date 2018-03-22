@@ -2,6 +2,7 @@ module SputnikUtilities
 
 using GroupedErrors
 using JuliaDB, IndexedTables
+using Parameters
 
 import IndexedTables: AbstractIndexedTable
 

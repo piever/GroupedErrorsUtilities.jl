@@ -3,5 +3,5 @@ function process(::Type{StatPlotsRecipe}, a::Analysis)
     t = a.data.table
     grp_cols = a.data.splitby
     cols = select(t, All(args, grp_cols)) |> dropna
-    a.plot(columns(cols,args)...; group = columns(cols, grp_cols),  a.plot_kwargs...)
+    a.plot(columns(cols, args)...; group = columns(cols, grp_cols),  a.plot_kwargs...)
 end
