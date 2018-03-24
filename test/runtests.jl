@@ -76,7 +76,7 @@ end
                  plot = plot,
                  axis_type = :continuous,
                  smoother = 50.0)
-    pl1 = process(a)
+    plt1 = process(a)
     plt2 = @> expected begin
         @across _.School
         @splitby _.Minrty
@@ -87,7 +87,7 @@ end
     @test compare_plots(plt1, plt2) < 0.001
 
     a = Analysis(data = sd,
-                 compute_error = (:across, :school),
+                 compute_error = (:across, :School),
                  x = :MAch,
                  y = :SSS,
                  xfunc = mean,
