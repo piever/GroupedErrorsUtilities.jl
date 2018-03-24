@@ -46,3 +46,26 @@ end
     plt2 = @df school scatter(:MAch, :SSS, legend = false)
     @test compare_plots(plt1, plt2) < 0.001
 end
+
+@testset "groupederrors" begin
+    school = GroupedErrors.exampletable("school.csv") |> loadtable
+    selectdiscrete = (SelectValues(:Minrty, ["Yes", "No"], true), SelectValues(:Sx, ["Male"], false))
+    selectcontinuous = (SelectInterval(:MAch, 6, 10),)
+    expected = filter(i -> i.Sx == "Male" && 6 <= i.MAch <= 10, school)
+    d2s  = Data2Select(school, selectdiscrete, selectcontinuous)
+    sd = SelectedData(d2s)
+    a = Analysis(data = sd,
+                 x = :MAch,
+                 y = :density,
+                 plot = plot,
+                 axis_type = :continuous,
+                 smoother = 50.0)
+    plt1 = process(a)
+    plt2 = @> expected begin
+        @splitby _.Minrty
+        @x _.MAch :continuous
+        @y :density bandwidth = (51.0)*std(column(expected, :MAch))/200
+        @plot plot()
+    end
+    @test compare_plots(plt1, plt2) < 0.001
+end

@@ -13,5 +13,6 @@ export Analysis, process
 include("selectdata.jl")
 include("process.jl")
 include(joinpath("techniques", "statplotsrecipe.jl"))
+include(joinpath("techniques", "groupederrors.jl"))
 
 end # module

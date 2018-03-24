@@ -27,8 +27,8 @@ function analysistype(a)
         a.axis_type == :pointbypoint && return PointByPoint
         return GroupedError
     end
-    !(a.plot in [:plot, :scatter, :groupedbar]) && return StatPlotsRecipe
-    error("Analysis not supported")
+    (a.y in colnames(a.data.table) || a.y === nothing) ? StatPlotsRecipe : GroupedError
+    #error("Analysis not supported")
 end
 
 process(a::Analysis) = process(analysistype(a), a)
