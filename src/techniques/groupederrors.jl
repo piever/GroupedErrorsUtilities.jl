@@ -19,7 +19,7 @@ end
 
 function process(::Type{GroupedError}, a::Analysis)
     s = GroupedErrors.ColumnSelector(a.data.table)
-    s = GroupedErrors._splitby(s, [a.data.splitby...])
+    s = GroupedErrors._splitby(s, Symbol[a.data.splitby...])
     s = compute_error(s, a.compute_error)
     if a.axis_type != :pointbypoint
         maybe_nbins = a.axis_type == :binned ? (round(Int64, 101-a.smoother),) : ()
