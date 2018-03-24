@@ -19,16 +19,11 @@ function Analysis(a::Analysis; kwargs...)
 end
 
 struct StatPlotsRecipe; end
-struct PointByPoint; end
 struct GroupedError; end
 
 function analysistype(a)
-    if a.compute_error !== nothing
-        a.axis_type == :pointbypoint && return PointByPoint
-        return GroupedError
-    end
+    a.compute_error !== nothing && return GroupedError
     (a.y in colnames(a.data.table) || a.y === nothing) ? StatPlotsRecipe : GroupedError
-    #error("Analysis not supported")
 end
 
 process(a::Analysis) = process(analysistype(a), a)

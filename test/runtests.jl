@@ -68,4 +68,39 @@ end
         @plot plot()
     end
     @test compare_plots(plt1, plt2) < 0.001
+
+    a = Analysis(data = sd,
+                 compute_error = (:across, :School),
+                 x = :MAch,
+                 y = :density,
+                 plot = plot,
+                 axis_type = :continuous,
+                 smoother = 50.0)
+    pl1 = process(a)
+    plt2 = @> expected begin
+        @across _.School
+        @splitby _.Minrty
+        @x _.MAch :continuous
+        @y :density bandwidth = (51.0)*std(column(expected, :MAch))/200
+        @plot plot()
+    end
+    @test compare_plots(plt1, plt2) < 0.001
+
+    a = Analysis(data = sd,
+                 compute_error = (:across, :school),
+                 x = :MAch,
+                 y = :SSS,
+                 xfunc = mean,
+                 yfunc = mean,
+                 plot = scatter,
+                 axis_type = :pointbypoint)
+    plt1 = process(a)
+    plt2 = @> expected begin
+        @across _.School
+        @splitby _.Minrty
+        @x _.MAch
+        @y _.SSS
+        @plot scatter()
+    end
+    @test compare_plots(plt1, plt2) < 0.001
 end
