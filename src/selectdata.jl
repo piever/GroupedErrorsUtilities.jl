@@ -2,7 +2,7 @@ struct SelectValues{T}
     name::Symbol
     values::Vector{T}
     split::Bool
-    select::Bool
+    filter::Bool
 end
 
 SelectValues(name, values, split = false) = SelectValues(name, values, split, true)
@@ -11,7 +11,7 @@ struct SelectPredicate{T}
     name::Symbol
     f::T
     split::Bool
-    select::Bool
+    filter::Bool
 end
 
 SelectPredicate(name, f, split = false) = SelectPredicate(name, f, split, true)
@@ -34,8 +34,8 @@ Base.:(==)(a::SelectedData, b::SelectedData) = (a.table == b.table) && (a.splitb
 
 function selectdata(df, discrete, continuous)
     f = function(i)
-        all(getfield(i, s.name) in s.values for s in discrete if s.select) &&
-        all(s.f(getfield(i, s.name)) for s in continuous if s.select)
+        all(getfield(i, s.name) in s.values for s in discrete if s.filter) &&
+        all(s.f(getfield(i, s.name)) for s in continuous if s.filter)
     end
     filter(f, df)
 end
