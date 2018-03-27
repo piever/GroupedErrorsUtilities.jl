@@ -2,18 +2,24 @@ struct SelectValues{T}
     name::Symbol
     values::Vector{T}
     split::Bool
+    select::Bool
 end
 
-struct SelectInterval{T}
+SelectValues(name, values, split = false) = SelectValues(name, values, split, true)
+
+struct SelectPredicate{T}
     name::Symbol
-    min::T
-    max::T
+    f::T
+    split::Bool
+    select::Bool
 end
+
+SelectPredicate(name, f, split = false) = SelectPredicate(name, f, split, true)
 
 struct Data2Select{T<:AbstractIndexedTable, N1, N2}
     table::T
     discrete::NTuple{N1, SelectValues}
-    continuous::NTuple{N2, SelectInterval}
+    continuous::NTuple{N2, SelectPredicate}
 end
 
 struct SelectedData{T<:AbstractIndexedTable, N}
@@ -28,8 +34,8 @@ Base.:(==)(a::SelectedData, b::SelectedData) = (a.table == b.table) && (a.splitb
 
 function selectdata(df, discrete, continuous)
     f = function(i)
-        all(getfield(i, s.name) in s.values for s in discrete) &&
-        all(s.min <= getfield(i, s.name) <= s.max for s in continuous)
+        all(getfield(i, s.name) in s.values for s in discrete if s.select) &&
+        all(s.f(getfield(i, s.name)) for s in continuous if s.select)
     end
     filter(f, df)
 end
